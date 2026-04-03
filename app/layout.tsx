@@ -4,17 +4,75 @@ import './globals.css';
 import { Toaster } from 'react-hot-toast';
 import { SessionProvider } from './providers';
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://cyber-quest.vercel.app';
+
 export const metadata: Metadata = {
-  title: 'CyberQuest — Learn Cybersecurity',
-  description: 'Master cybersecurity through gamified learning. Challenges, exams, certifications — from beginner to expert.',
-  keywords: 'cybersecurity, ethical hacking, CTF, learn security, penetration testing',
-  authors: [{ name: 'CyberQuest' }],
-  themeColor: '#00ff88',
-  openGraph: {
-    title: 'CyberQuest — Learn Cybersecurity',
-    description: 'Master cybersecurity through gamified learning.',
-    type: 'website',
+  metadataBase: new URL(APP_URL),
+  title: {
+    default: 'CyberQuest — Learn Cybersecurity Online | Ethical Hacking Courses',
+    template: '%s | CyberQuest',
   },
+  description: 'Master cybersecurity with CyberQuest. Free & paid courses on ethical hacking, web security, CTF challenges, network hacking, digital forensics. Earn certifications. Join 50,000+ hackers.',
+  keywords: [
+    'cybersecurity course', 'learn ethical hacking', 'CTF challenges', 'web security',
+    'penetration testing', 'cybersecurity certification', 'free hacking course',
+    'OWASP', 'SQL injection', 'network security', 'cyber security training',
+    'hacking course online', 'bug bounty', 'information security', 'cyber security beginner',
+    'learn hacking', 'kali linux', 'metasploit', 'cybersecurity roadmap',
+  ],
+  authors: [{ name: 'CyberQuest', url: APP_URL }],
+  creator: 'CyberQuest',
+  publisher: 'CyberQuest',
+  category: 'Education',
+  classification: 'Cybersecurity Education Platform',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: APP_URL,
+    siteName: 'CyberQuest',
+    title: 'CyberQuest — Learn Cybersecurity | Ethical Hacking Courses',
+    description: 'Master cybersecurity with gamified learning. CTF challenges, courses, certifications. From beginner to expert hacker.',
+    images: [
+      {
+        url: `${APP_URL}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: 'CyberQuest - Learn Cybersecurity',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CyberQuest — Learn Cybersecurity Online',
+    description: 'Master ethical hacking, web security, CTF challenges. Free courses + certifications.',
+    images: [`${APP_URL}/og-image.png`],
+    creator: '@cyberquest',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: 'add-your-google-search-console-verification-code',
+    yandex: 'add-your-yandex-verification',
+  },
+  alternates: {
+    canonical: APP_URL,
+  },
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
+  manifest: '/manifest.json',
+  themeColor: '#00ff88',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -24,6 +82,29 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;400;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+        {/* JSON-LD Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'EducationalOrganization',
+              name: 'CyberQuest',
+              url: APP_URL,
+              description: 'Online cybersecurity education platform with courses, CTF challenges, and certifications.',
+              offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'USD',
+                description: 'Free cybersecurity courses',
+              },
+              sameAs: [
+                'https://twitter.com/cyberquest',
+                'https://github.com/cyberquest',
+              ],
+            }),
+          }}
+        />
       </head>
       <body className="scanlines">
         <SessionProvider>
@@ -38,12 +119,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 borderRadius: '8px',
                 fontFamily: 'JetBrains Mono, monospace',
               },
-              success: {
-                iconTheme: { primary: '#00ff88', secondary: '#000' },
-              },
-              error: {
-                iconTheme: { primary: '#ff0055', secondary: '#fff' },
-              },
+              success: { iconTheme: { primary: '#00ff88', secondary: '#000' } },
+              error: { iconTheme: { primary: '#ff0055', secondary: '#fff' } },
             }}
           />
         </SessionProvider>

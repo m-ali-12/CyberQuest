@@ -1,0 +1,4 @@
+Create a 1200x630 PNG image named og-image.png
+Place it in the public/ folder
+Design: Dark background (#0a0e1a), CyberQuest logo, green text
+This image shows when your site is shared on social media
