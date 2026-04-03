@@ -1,0 +1,310 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String    @id @default(cuid())
+  name              String?
+  email             String    @unique
+  emailVerified     DateTime?
+  password          String?
+  image             String?
+  role              Role      @default(USER)
+  plan              Plan      @default(FREE)
+  xp                Int       @default(0)
+  level             Int       @default(1)
+  streak            Int       @default(0)
+  lastLoginAt       DateTime?
+  loginCount        Int       @default(0)
+  isBanned          Boolean   @default(false)
+  banUntil          DateTime?
+  banCount          Int       @default(0)
+  activeSessions    Int       @default(0)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  sessions          Session[]
+  accounts          Account[]
+  progress          UserProgress[]
+  challengeAttempts ChallengeAttempt[]
+  examAttempts      ExamAttempt[]
+  certifications    Certification[]
+  achievements      UserAchievement[]
+  loginSessions     LoginSession[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model LoginSession {
+  id         String   @id @default(cuid())
+  userId     String
+  sessionId  String   @unique
+  ipAddress  String?
+  userAgent  String?
+  browser    String?
+  createdAt  DateTime @default(now())
+  lastActive DateTime @default(now())
+  isActive   Boolean  @default(true)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String
+  icon        String
+  color       String
+  difficulty  Difficulty
+  isPremium   Boolean  @default(false)
+  order       Int      @default(0)
+  totalXp     Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  modules     Module[]
+  progress    UserProgress[]
+  exams       Exam[]
+}
+
+model Module {
+  id          String   @id @default(cuid())
+  courseId    String
+  title       String
+  description String
+  order       Int
+  xpReward    Int      @default(50)
+  isPremium   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons     Lesson[]
+  progress    UserProgress[]
+}
+
+model Lesson {
+  id          String      @id @default(cuid())
+  moduleId    String
+  title       String
+  content     String      @db.Text
+  type        LessonType  @default(TEXT)
+  order       Int
+  xpReward    Int         @default(25)
+  duration    Int         @default(10)
+  isPremium   Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  module      Module      @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  progress    UserProgress[]
+}
+
+model UserProgress {
+  id          String    @id @default(cuid())
+  userId      String
+  courseId    String?
+  moduleId    String?
+  lessonId    String?
+  status      ProgressStatus @default(NOT_STARTED)
+  score       Int?
+  xpEarned    Int       @default(0)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course      Course?   @relation(fields: [courseId], references: [id])
+  module      Module?   @relation(fields: [moduleId], references: [id])
+  lesson      Lesson?   @relation(fields: [lessonId], references: [id])
+
+  @@unique([userId, courseId, moduleId, lessonId])
+}
+
+model Challenge {
+  id          String          @id @default(cuid())
+  title       String
+  description String          @db.Text
+  category    ChallengeCategory
+  difficulty  Difficulty
+  points      Int
+  flag        String
+  hints       String[]
+  isPremium   Boolean         @default(false)
+  isActive    Boolean         @default(true)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  attempts    ChallengeAttempt[]
+}
+
+model ChallengeAttempt {
+  id          String    @id @default(cuid())
+  userId      String
+  challengeId String
+  answer      String
+  isCorrect   Boolean
+  xpEarned    Int       @default(0)
+  attemptedAt DateTime  @default(now())
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  challenge   Challenge @relation(fields: [challengeId], references: [id])
+}
+
+model Exam {
+  id          String    @id @default(cuid())
+  courseId    String
+  title       String
+  description String
+  duration    Int       // minutes
+  passingScore Int      @default(70)
+  xpReward    Int       @default(200)
+  isPremium   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  course      Course    @relation(fields: [courseId], references: [id])
+  questions   Question[]
+  attempts    ExamAttempt[]
+}
+
+model Question {
+  id          String    @id @default(cuid())
+  examId      String
+  text        String    @db.Text
+  type        QuestionType @default(MCQ)
+  options     String[]
+  answer      String
+  explanation String?   @db.Text
+  points      Int       @default(10)
+  order       Int
+
+  exam        Exam      @relation(fields: [examId], references: [id], onDelete: Cascade)
+}
+
+model ExamAttempt {
+  id          String    @id @default(cuid())
+  userId      String
+  examId      String
+  answers     Json
+  score       Int
+  passed      Boolean
+  xpEarned    Int       @default(0)
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exam        Exam      @relation(fields: [examId], references: [id])
+}
+
+model Certification {
+  id          String    @id @default(cuid())
+  userId      String
+  title       String
+  courseId    String
+  issueDate   DateTime  @default(now())
+  certId      String    @unique @default(cuid())
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Achievement {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  icon        String
+  condition   String
+  xpReward    Int       @default(50)
+  createdAt   DateTime  @default(now())
+
+  users       UserAchievement[]
+}
+
+model UserAchievement {
+  id            String      @id @default(cuid())
+  userId        String
+  achievementId String
+  earnedAt      DateTime    @default(now())
+
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement   Achievement @relation(fields: [achievementId], references: [id])
+
+  @@unique([userId, achievementId])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Plan {
+  FREE
+  PRO
+}
+
+enum Difficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+enum LessonType {
+  TEXT
+  VIDEO
+  QUIZ
+  LAB
+  GAME
+}
+
+enum ProgressStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum ChallengeCategory {
+  WEB
+  CRYPTO
+  FORENSICS
+  NETWORK
+  REVERSE
+  OSINT
+  STEGANOGRAPHY
+}
+
+enum QuestionType {
+  MCQ
+  TRUE_FALSE
+  FILL_BLANK
+}

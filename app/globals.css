@@ -1,0 +1,269 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;400;600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cyber-green: #00ff88;
+  --cyber-blue: #00d4ff;
+  --cyber-red: #ff0055;
+  --cyber-purple: #7c3aed;
+  --cyber-yellow: #fbbf24;
+  --cyber-dark: #0a0e1a;
+  --cyber-card: #0f1629;
+  --cyber-border: #1e2d4a;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--cyber-dark);
+  color: #e2e8f0;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--cyber-dark); }
+::-webkit-scrollbar-thumb { background: var(--cyber-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--cyber-green); }
+
+/* Selection */
+::selection { background: rgba(0,255,136,0.2); color: var(--cyber-green); }
+
+/* Cyber Grid Background */
+.cyber-grid {
+  background-image: 
+    linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Glowing border */
+.glow-border {
+  border: 1px solid var(--cyber-green);
+  box-shadow: 0 0 10px rgba(0,255,136,0.3), inset 0 0 10px rgba(0,255,136,0.05);
+}
+
+.glow-border-blue {
+  border: 1px solid var(--cyber-blue);
+  box-shadow: 0 0 10px rgba(0,212,255,0.3), inset 0 0 10px rgba(0,212,255,0.05);
+}
+
+.glow-border-red {
+  border: 1px solid var(--cyber-red);
+  box-shadow: 0 0 10px rgba(255,0,85,0.3);
+}
+
+/* Scan line effect */
+.scanlines::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Terminal text */
+.terminal {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--cyber-green);
+}
+
+/* Card styles */
+.cyber-card {
+  background: var(--cyber-card);
+  border: 1px solid var(--cyber-border);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.cyber-card:hover {
+  border-color: rgba(0,255,136,0.4);
+  box-shadow: 0 0 20px rgba(0,255,136,0.1);
+}
+
+/* Button styles */
+.btn-cyber {
+  background: linear-gradient(135deg, rgba(0,255,136,0.1), rgba(0,212,255,0.1));
+  border: 1px solid var(--cyber-green);
+  color: var(--cyber-green);
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-cyber::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0,255,136,0.1), transparent);
+  transition: left 0.4s ease;
+}
+
+.btn-cyber:hover::before { left: 100%; }
+.btn-cyber:hover {
+  background: rgba(0,255,136,0.15);
+  box-shadow: 0 0 20px rgba(0,255,136,0.4);
+}
+
+.btn-cyber-solid {
+  background: var(--cyber-green);
+  color: #000;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cyber-solid:hover {
+  background: #00cc70;
+  box-shadow: 0 0 20px rgba(0,255,136,0.5);
+  transform: translateY(-1px);
+}
+
+/* Progress bar */
+.progress-bar {
+  background: var(--cyber-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyber-green), var(--cyber-blue));
+  border-radius: 10px;
+  transition: width 0.8s ease;
+  box-shadow: 0 0 10px rgba(0,255,136,0.5);
+}
+
+/* Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Typing cursor */
+.typing-cursor::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* XP notification */
+.xp-popup {
+  animation: xpFloat 2s ease-out forwards;
+}
+
+@keyframes xpFloat {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-60px); }
+}
+
+/* Hex pattern */
+.hex-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5L55 20L55 50L30 65L5 50L5 20z' fill='none' stroke='rgba(0,255,136,0.05)' stroke-width='1'/%3E%3C/svg%3E");
+}
+
+/* Loading skeleton */
+.skeleton {
+  background: linear-gradient(90deg, var(--cyber-card) 25%, rgba(30,45,74,0.5) 50%, var(--cyber-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Code block */
+.code-block {
+  background: rgba(0,0,0,0.5);
+  border: 1px solid var(--cyber-border);
+  border-left: 3px solid var(--cyber-green);
+  border-radius: 4px;
+  padding: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  overflow-x: auto;
+  position: relative;
+}
+
+/* Neon text */
+.neon-text {
+  text-shadow: 0 0 10px var(--cyber-green), 0 0 20px var(--cyber-green), 0 0 40px var(--cyber-green);
+}
+
+.neon-text-blue {
+  text-shadow: 0 0 10px var(--cyber-blue), 0 0 20px var(--cyber-blue);
+}
+
+/* Achievement unlock animation */
+@keyframes achievementUnlock {
+  0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+  60% { transform: scale(1.1) rotate(5deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.achievement-unlock { animation: achievementUnlock 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+/* Matrix rain effect */
+.matrix-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.03;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cyber-grid { background-size: 30px 30px; }
+}
