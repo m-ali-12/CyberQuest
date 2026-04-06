@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Shield, Terminal, Trophy, Zap, Lock, Users, Star, ChevronRight, Globe, Code, Eye } from 'lucide-react';
+import PublicNav from '@/components/layout/PublicNav';
 
 const TYPING_TEXTS = [
   'Learn Ethical Hacking',
@@ -120,31 +121,7 @@ export default function Home() {
     <div className="min-h-screen bg-cyber-dark overflow-x-hidden">
       <MatrixRain />
       
-      {/* Navbar */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-cyber-dark/90 backdrop-blur-xl border-b border-cyber-border' : ''}`}>
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-cyber-green rounded flex items-center justify-center">
-              <Shield className="w-5 h-5 text-black" />
-            </div>
-            <span className="font-display font-bold text-white text-lg tracking-wider">CYBER<span className="text-cyber-green">QUEST</span></span>
-          </div>
-          <div className="hidden md:flex items-center gap-8">
-            {[
-              { label: 'Courses', href: '/courses' },
-              { label: 'Challenges', href: '/challenges' },
-              { label: 'Roadmap', href: '/roadmap' },
-              { label: 'Pricing', href: '/#pricing' },
-            ].map(item => (
-              <Link key={item.label} href={item.href} className="text-gray-400 hover:text-cyber-green transition-colors font-mono text-sm">{item.label}</Link>
-            ))}
-          </div>
-          <div className="flex items-center gap-3">
-            <Link href="/login" className="text-gray-400 hover:text-white transition-colors font-mono text-sm px-4 py-2">Login</Link>
-            <Link href="/register" className="btn-cyber-solid text-sm px-5 py-2 rounded">Start Free</Link>
-          </div>
-        </div>
-      </nav>
+      <PublicNav />
       
       {/* Hero */}
       <section className="relative min-h-screen flex items-center justify-center cyber-grid pt-20">
