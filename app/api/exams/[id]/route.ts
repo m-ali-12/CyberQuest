@@ -10,11 +10,16 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   const exam = await prisma.exam.findUnique({
     where: { id: params.id },
     include: {
-      questions: { orderBy: { order: 'asc' }, select: { id: true, text: true, type: true, options: true, answer: true, explanation: true, points: true, order: true } },
-      course: { select: { title: true } },
+      questions: { orderBy: { order: 'asc' }, select: { id: true, text: true, type: true, options: true, points: true, order: true } },
+      course: { select: { title: true, isPremium: true } },
     },
   });
   if (!exam) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+
+  const plan = (session.user as any).plan;
+  if ((exam.isPremium || exam.course.isPremium) && plan !== 'PRO') {
+    return NextResponse.json({ error: 'Upgrade required for this Pro exam' }, { status: 402 });
+  }
 
   return NextResponse.json({
     id: exam.id,

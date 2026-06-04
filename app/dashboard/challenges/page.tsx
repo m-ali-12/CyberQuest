@@ -5,7 +5,7 @@ import { Terminal, Lock, CheckCircle, Flag, HelpCircle, Send, Filter } from 'luc
 import { categoryIcon, difficultyColor, difficultyBg } from '@/lib/utils';
 import toast from 'react-hot-toast';
 
-const CATEGORIES = ['ALL', 'WEB', 'CRYPTO', 'FORENSICS', 'NETWORK', 'REVERSE', 'OSINT', 'STEGANOGRAPHY'];
+const CATEGORIES = ['ALL', 'WEB', 'CRYPTO', 'FORENSICS', 'NETWORK', 'REVERSE', 'OSINT', 'STEGANOGRAPHY', 'CLOUD', 'LINUX', 'MOBILE', 'MALWARE', 'IAM', 'BUG_BOUNTY', 'DEVSECOPS', 'INCIDENT_RESPONSE'];
 const DIFFICULTIES = ['ALL', 'BEGINNER', 'INTERMEDIATE', 'ADVANCED'];
 
 export default function ChallengesPage() {
@@ -38,6 +38,14 @@ export default function ChallengesPage() {
         body: JSON.stringify({ flag }),
       });
       const data = await res.json();
+      if (res.status === 402) {
+        toast.error('🔒 Pro access required for this challenge');
+        return;
+      }
+      if (!res.ok) {
+        toast.error(data.error || 'Error submitting');
+        return;
+      }
       if (data.correct) {
         toast.success(`🎉 Correct! +${selected.points} XP`);
         setChallenges(prev => prev.map(c => c.id === selected.id ? { ...c, solved: true } : c));

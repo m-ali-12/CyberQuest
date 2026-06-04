@@ -18,9 +18,9 @@ export const metadata: Metadata = {
     default: 'CyberQuest — Learn Cybersecurity Online | Ethical Hacking Courses',
     template: '%s | CyberQuest',
   },
-  description: 'Master cybersecurity with CyberQuest. Free & paid courses on ethical hacking, web security, CTF challenges, network hacking, digital forensics. Earn certifications. Join 50,000+ hackers.',
+  description: 'Master cybersecurity with CyberQuest. A structured learning platform for beginners and intermediate learners with ethical hacking courses, CTF challenges, labs, AI-guided recommendations, roadmap tracking, and certifications.',
   keywords: [
-    'cybersecurity course', 'learn ethical hacking', 'CTF challenges', 'web security',
+    'cybersecurity course', 'learn ethical hacking', 'CTF challenges', 'web security', 'AI cybersecurity learning recommendation', 'beginner cybersecurity roadmap',
     'penetration testing', 'cybersecurity certification', 'free hacking course',
     'OWASP', 'SQL injection', 'network security', 'cyber security training',
     'hacking course online', 'bug bounty', 'information security', 'cyber security beginner',
@@ -67,7 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               '@type': 'EducationalOrganization',
               name: 'CyberQuest',
               url: APP_URL,
-              description: 'Online cybersecurity education platform with courses, CTF challenges, and certifications.',
+              description: 'Online cybersecurity education platform with courses, CTF challenges, AI-guided recommendations, practical labs, roadmaps, and certifications for beginner and intermediate learners.',
               offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: 'Free cybersecurity courses' },
             }),
           }}

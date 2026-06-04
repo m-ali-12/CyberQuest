@@ -10,12 +10,20 @@ export async function POST(req: Request, { params }: { params: { id: string } })
 
   const userId = session.user.id as string;
   const { answers } = await req.json();
+  if (!answers || typeof answers !== 'object') {
+    return NextResponse.json({ error: 'Answers are required' }, { status: 400 });
+  }
 
   const exam = await prisma.exam.findUnique({
     where: { id: params.id },
-    include: { questions: true, course: { select: { title: true } } },
+    include: { questions: true, course: { select: { title: true, isPremium: true } } },
   });
   if (!exam) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+
+  const plan = (session.user as any).plan;
+  if ((exam.isPremium || exam.course.isPremium) && plan !== 'PRO') {
+    return NextResponse.json({ error: 'Upgrade required for this Pro exam' }, { status: 402 });
+  }
 
   // Score it
   let correct = 0;
@@ -26,7 +34,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     if (answers[q.id] === q.answer) { correct++; earnedPoints += q.points; }
   });
 
-  const score = Math.round((earnedPoints / totalPoints) * 100);
+  const score = totalPoints > 0 ? Math.round((earnedPoints / totalPoints) * 100) : 0;
   const passed = score >= exam.passingScore;
   const xpEarned = passed ? exam.xpReward : Math.round(exam.xpReward * 0.1);
 

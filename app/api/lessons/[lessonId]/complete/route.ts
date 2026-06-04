@@ -12,9 +12,15 @@ export async function POST(req: Request, { params }: { params: { lessonId: strin
 
   const lesson = await prisma.lesson.findUnique({
     where: { id: params.lessonId },
-    include: { module: { select: { courseId: true, id: true } } },
+    include: { module: { include: { course: { select: { isPremium: true } } } } },
   });
   if (!lesson) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+
+  const plan = (session.user as any).plan;
+  const locked = lesson.isPremium || lesson.module.isPremium || lesson.module.course.isPremium;
+  if (locked && plan !== 'PRO') {
+    return NextResponse.json({ error: 'Upgrade required for this Pro lesson' }, { status: 402 });
+  }
 
   // Check if already completed
   const existing = await prisma.userProgress.findFirst({

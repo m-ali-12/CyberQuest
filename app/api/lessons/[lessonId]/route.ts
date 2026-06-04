@@ -7,12 +7,20 @@ export async function GET(req: Request, { params }: { params: { lessonId: string
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
+  const userId = session.user.id as string;
+
   const lesson = await prisma.lesson.findUnique({
     where: { id: params.lessonId },
-    include: { module: { select: { title: true, courseId: true } } },
+    include: { module: { include: { course: { select: { isPremium: true } } } } },
   });
 
   if (!lesson) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+
+  const user = await prisma.user.findUnique({ where: { id: userId }, select: { plan: true } });
+  const locked = lesson.isPremium || lesson.module.isPremium || lesson.module.course.isPremium;
+  if (locked && user?.plan !== 'PRO') {
+    return NextResponse.json({ error: 'Upgrade required for this Pro lesson' }, { status: 402 });
+  }
 
   return NextResponse.json({
     ...lesson,

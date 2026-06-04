@@ -11,8 +11,20 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   const userId = session.user.id as string;
   const { flag } = await req.json();
 
-  const challenge = await prisma.challenge.findUnique({ where: { id: params.id } });
-  if (!challenge) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  if (!flag || typeof flag !== 'string') {
+    return NextResponse.json({ error: 'Flag is required' }, { status: 400 });
+  }
+
+  const [challenge, user] = await Promise.all([
+    prisma.challenge.findUnique({ where: { id: params.id } }),
+    prisma.user.findUnique({ where: { id: userId }, select: { plan: true, isBanned: true } }),
+  ]);
+
+  if (!challenge || !challenge.isActive) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  if (!user || user.isBanned) return NextResponse.json({ error: 'Account restricted' }, { status: 403 });
+  if (challenge.isPremium && user.plan !== 'PRO') {
+    return NextResponse.json({ error: 'Upgrade required for this Pro challenge' }, { status: 402 });
+  }
 
   // Check if already solved
   const alreadySolved = await prisma.challengeAttempt.findFirst({

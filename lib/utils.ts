@@ -58,6 +58,14 @@ export function categoryIcon(category: string): string {
     REVERSE: '⚙️',
     OSINT: '👁️',
     STEGANOGRAPHY: '🖼️',
+    CLOUD: '☁️',
+    LINUX: '🐧',
+    MOBILE: '📱',
+    MALWARE: '🦠',
+    IAM: '🔑',
+    BUG_BOUNTY: '🐞',
+    DEVSECOPS: '🚀',
+    INCIDENT_RESPONSE: '🚨',
   };
   return icons[category] || '💻';
 }

@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 import {
   LayoutDashboard, BookOpen, Terminal, Trophy, FileCheck,
-  Award, Map, BarChart2, Settings, LogOut, Shield, Crown, ChevronRight
+  Award, Map, BarChart2, Settings, LogOut, Shield, Crown, ChevronRight, Bot, ShieldAlert, Brain
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -13,6 +13,9 @@ const NAV = [
   { href: '/dashboard/courses', icon: BookOpen, label: 'Courses' },
   { href: '/dashboard/challenges', icon: Terminal, label: 'Challenges' },
   { href: '/dashboard/exams', icon: FileCheck, label: 'Exams' },
+  { href: '/dashboard/ai-risk', icon: ShieldAlert, label: 'AI Risk' },
+  { href: '/dashboard/mock-interview', icon: Bot, label: 'AI Interview' },
+  { href: '/dashboard/career-counselor', icon: Brain, label: 'AI Counselor' },
   { href: '/dashboard/certifications', icon: Award, label: 'Certifications' },
   { href: '/dashboard/roadmap', icon: Map, label: 'Roadmap' },
   { href: '/dashboard/leaderboard', icon: Trophy, label: 'Leaderboard' },

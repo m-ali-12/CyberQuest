@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { Terminal, Lock, Unlock, Eye, EyeOff, Plus, Flag } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-const catIcon: Record<string, string> = { WEB: '🌐', CRYPTO: '🔐', FORENSICS: '🔍', NETWORK: '📡', REVERSE: '⚙️', OSINT: '👁️', STEGANOGRAPHY: '🖼️' };
+const CHALLENGE_CATEGORIES = ['WEB','CRYPTO','FORENSICS','NETWORK','REVERSE','OSINT','STEGANOGRAPHY','CLOUD','LINUX','MOBILE','MALWARE','IAM','BUG_BOUNTY','DEVSECOPS','INCIDENT_RESPONSE'];
+const catIcon: Record<string, string> = { WEB: '🌐', CRYPTO: '🔐', FORENSICS: '🔍', NETWORK: '📡', REVERSE: '⚙️', OSINT: '👁️', STEGANOGRAPHY: '🖼️', CLOUD: '☁️', LINUX: '🐧', MOBILE: '📱', MALWARE: '🦠', IAM: '🔑', BUG_BOUNTY: '🐞', DEVSECOPS: '🚀', INCIDENT_RESPONSE: '🚨' };
 const diffColor: Record<string, string> = {
   BEGINNER: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20',
   INTERMEDIATE: 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20',
@@ -85,7 +86,7 @@ export default function AdminChallengesClient({ challenges: initial }: { challen
               <label className="block text-xs font-mono text-gray-400 mb-1 uppercase">Category</label>
               <select value={newChallenge.category} onChange={e => setNewChallenge(p => ({ ...p, category: e.target.value }))}
                 className="w-full bg-black/30 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm font-mono focus:outline-none focus:border-emerald-500/50">
-                {['WEB','CRYPTO','FORENSICS','NETWORK','REVERSE','OSINT','STEGANOGRAPHY'].map(c => <option key={c}>{c}</option>)}
+                {CHALLENGE_CATEGORIES.map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
             <div>
